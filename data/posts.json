@@ -1,0 +1,18 @@
+[
+  {
+    "slug": "meu-primeiro-artigo",
+    "title": "Meu Primeiro Artigo",
+    "author": "Fulano de Tal",
+    "date": "2025-01-01",
+    "description": "Um post de introdução ao blog.",
+    "content": "Este é o conteúdo completo do meu primeiro artigo..."
+  },
+  {
+    "slug": "tutorial-nextjs",
+    "title": "Como Criar um Blog com Next.js",
+    "author": "Ciclano",
+    "date": "2025-02-10",
+    "description": "Aprenda a criar um blog utilizando o App Router.",
+    "content": "Conteúdo detalhado sobre Next.js App Router..."
+  }
+]

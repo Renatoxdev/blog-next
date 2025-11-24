@@ -1,48 +1,47 @@
-import { getPosts, getPostBySlug } from "@/lib/posts";
-import Link from "next/link";
+import { notFound } from "next/navigation";
+import posts from "@/data/posts.json";
 
 export async function generateStaticParams() {
-  const posts = getPosts();
-  return posts.map((p) => ({ slug: p.slug }));
+  return posts.map((post) => ({
+    slug: post.slug,
+  }));
 }
 
-export function generateMetadata({ params }: { params: { slug: string } }) {
-  const post = getPostBySlug(params.slug);
+export async function generateMetadata({ params }: { params: { slug: string } }) {
+  const post = posts.find((p) => p.slug === params.slug);
+
   if (!post) {
     return {
       title: "Artigo não encontrado",
-      description: "Artigo inexistente"
+      description: "Este artigo não existe.",
     };
   }
+
   return {
     title: post.title,
-    description: post.excerpt
+    description: post.description ?? "Artigo do blog",
   };
 }
 
-export default function ArtigoPage({ params }: { params: { slug: string } }) {
-  const post = getPostBySlug(params.slug);
-  if (!post) {
-    return (
-      <main className="container">
-        <h1>Artigo não encontrado</h1>
-        <p>Verifique se o slug está correto ou adicione o post em <code>data/posts.ts</code>.</p>
-        <Link href="/artigos" className="btn-primary">Voltar</Link>
-      </main>
-    );
-  }
+export default function PostPage({ params }: { params: { slug: string } }) {
+  const post = posts.find((p) => p.slug === params.slug);
+
+  if (!post) return notFound();
+
+  const date = post.date ?? "Data não informada";
+  const author = post.author ?? "Autor anônimo";
 
   return (
-    <main className="container artigo">
-      <div className="kicker">Artigo</div>
+    <article className="article-container">
       <h1>{post.title}</h1>
-      <div className="article-meta">{post.date} • Autor: {post.author ?? "Autor anônimo"}</div>
 
-      <article className="article-content" dangerouslySetInnerHTML={{ __html: post.content }} />
-
-      <div style={{ marginTop: 18 }}>
-        <Link href="/artigos" className="btn-primary">Voltar para artigos</Link>
+      <div className="article-meta">
+        {date} • Autor: {author}
       </div>
-    </main>
+
+      <div className="article-content">
+        {post.content}
+      </div>
+    </article>
   );
 }
