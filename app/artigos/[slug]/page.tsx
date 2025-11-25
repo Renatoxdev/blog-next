@@ -1,47 +1,28 @@
-import { notFound } from "next/navigation";
-import posts from "@/data/posts.json";
+// app/artigos/[slug]/page.tsx
+import { getPostBySlug } from "@/lib/posts";
 
 export async function generateStaticParams() {
-  return posts.map((post) => ({
+  const { getPosts } = await import("@/lib/posts");
+  return getPosts().map((post) => ({
     slug: post.slug,
   }));
 }
 
-export async function generateMetadata({ params }: { params: { slug: string } }) {
-  const post = posts.find((p) => p.slug === params.slug);
+export default async function PostPage({ params }) {
+  const { slug } = await params;
+  const post = getPostBySlug(slug);
 
-  if (!post) {
-    return {
-      title: "Artigo não encontrado",
-      description: "Este artigo não existe.",
-    };
-  }
-
-  return {
-    title: post.title,
-    description: post.description ?? "Artigo do blog",
-  };
-}
-
-export default function PostPage({ params }: { params: { slug: string } }) {
-  const post = posts.find((p) => p.slug === params.slug);
-
-  if (!post) return notFound();
-
-  const date = post.date ?? "Data não informada";
-  const author = post.author ?? "Autor anônimo";
+  if (!post) return <h1>Post não encontrado</h1>;
 
   return (
-    <article className="article-container">
+    <main className="container">
       <h1>{post.title}</h1>
-
       <div className="article-meta">
-        {date} • Autor: {author}
+        {post.date} • Autor: {post.author ?? "Autor anônimo"}
       </div>
-
-      <div className="article-content">
-        {post.content}
-      </div>
-    </article>
+      <article className="article-content">
+        <p>{post.content}</p>
+      </article>
+    </main>
   );
 }
