@@ -1,15 +1,20 @@
-// app/artigos/[slug]/page.tsx
-import { getPostBySlug } from "@/lib/posts";
+import { getPostBySlug, getPosts } from "@/lib/posts";
 
 export async function generateStaticParams() {
-  const { getPosts } = await import("@/lib/posts");
   return getPosts().map((post) => ({
     slug: post.slug,
   }));
 }
 
-export default async function PostPage({ params }) {
+interface PostPageProps {
+  params: Promise<{
+    slug: string;
+  }>;
+}
+
+export default async function PostPage({ params }: PostPageProps) {
   const { slug } = await params;
+
   const post = getPostBySlug(slug);
 
   if (!post) return <h1>Post não encontrado</h1>;

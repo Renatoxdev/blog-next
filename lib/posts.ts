@@ -4,6 +4,6 @@ export function getPosts() {
   return posts;
 }
 
-export function getPostBySlug(slug) {
+export function getPostBySlug(slug: string) {
   return posts.find((p) => p.slug === slug);
 }

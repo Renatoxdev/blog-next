@@ -6,9 +6,7 @@ export default function ArtigosPage() {
 
   return (
     <main className="container">
-      <div className="kicker">Artigos</div>
       <h1>Todos os artigos</h1>
-      <p>Adicione novos posts editando o arquivo <code>data/posts.ts</code>.</p>
 
       <div className="articles-grid" style={{ marginTop: "1.2rem" }}>
         {posts.map((post) => (

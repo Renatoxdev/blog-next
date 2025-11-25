@@ -6,7 +6,7 @@ export const posts = [
     date: "2025-11-20",
     excerpt: "Aprenda os primeiros passos com React e como ele funciona.",
     content: `
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit...
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris porta...
     `
   },
   {
