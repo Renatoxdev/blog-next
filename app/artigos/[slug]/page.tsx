@@ -1,32 +1,44 @@
-import { getPostBySlug, getPosts } from "@/lib/posts";
+import { Metadata } from "next";
+import { posts } from "@/data/posts";
 
-export async function generateStaticParams() {
-  return getPosts().map((post) => ({
-    slug: post.slug,
-  }));
-}
+type Props = {
+  params: Promise<{ slug: string }>;
+};
 
-interface PostPageProps {
-  params: Promise<{
-    slug: string;
-  }>;
-}
-
-export default async function PostPage({ params }: PostPageProps) {
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
+  const post = posts.find((p) => p.slug === slug);
 
-  const post = getPostBySlug(slug);
+  if (!post) {
+    return {
+      title: "Artigo não encontrado",
+    };
+  }
 
-  if (!post) return <h1>Post não encontrado</h1>;
+  return {
+    title: post.title,
+    description: post.excerpt,
+  };
+}
+
+export default async function PostPage({ params }: Props) {
+  const { slug } = await params;
+  const post = posts.find((p) => p.slug === slug);
+
+  if (!post) {
+    return <h1>Artigo não encontrado</h1>;
+  }
 
   return (
     <main className="container">
+      <div className="kicker">Artigo</div>
       <h1>{post.title}</h1>
-      <div className="article-meta">
+      <p className="article-meta">
         {post.date} • Autor: {post.author ?? "Autor anônimo"}
-      </div>
-      <article className="article-content">
-        <p>{post.content}</p>
+      </p>
+
+      <article className="content">
+        {post.content}
       </article>
     </main>
   );
